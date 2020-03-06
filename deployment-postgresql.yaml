@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1 # https://qiita.com/yoshis2/items/e600ec7ec3b67224f2b0
+kind: Deployment
+metadata:
+  name: postgresql
+spec:
+  selector:
+    matchLabels:
+      app: postgresql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgresql
+        service: postgresql
+    spec:
+      containers:
+      - name: postgresql
+        image: postgresql:12-alpine
+        env:
+          - name: POSTGRES_USER
+            value: lisk
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_DB
+            value: lisk
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+          - name: postgresql-data
+            mountPath: /var/lib/postgresql/data
+      restartPolicy: Always
+      volumes:
+        - name: postgresql-data
+          azureDisk:
+            kind: Managed
+            diskName: postgresql
+            diskURI: リソースID
+

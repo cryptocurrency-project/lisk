@@ -1,0 +1,67 @@
+apiVersion: extensions/v1beta1 # https://qiita.com/yoshis2/items/e600ec7ec3b67224f2b0
+kind: Deployment
+metadata:
+  name: lsk-core
+spec:
+  selector:
+    matchLabels:
+      app: lsk-core
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: lsk-core
+        service: lsk-core
+    spec:
+      containers:
+      - name: lsk
+        image: lsk-core:v2.1.5
+        env:
+          - name: LISK_NETWORK
+            value:
+          - name: LISK_CONFIG_FILE
+            value: "config/default/config.json"
+          - name: LISK_WS_PORT
+            value: "8001"
+          - name: LISK_HTTP_PORT
+            value: "8000"
+          - name: LISK_ADDRESS
+            value: "0.0.0.0"
+          - name: LISK_FILE_LOG_LEVEL
+            value: none
+          - name: LISK_CONSOLE_LOG_LEVEL
+            value: info
+          - name: LISK_CACHE_ENABLED
+            value: "true"
+          - name: LISK_DB_NAME
+            value: lisk
+          - name: LISK_DB_HOST
+            value: postgresql
+          - name: LISK_DB_PORT
+            value: "5432"
+          - name: LISK_DB_USER
+            value: lisk
+          - name: LISK_DB_PASSWORD
+            value: password
+          - name: LISK_REDIS_HOST
+            value: redis
+          - name: LISK_REDIS_PORT
+            value: "6397"
+          - name: LISK_REDIS_DB_NAME
+            value: lisk
+          - name: LISK_REDIS_DB_PASSWORD
+            value: password
+          - name: LISK_API_PUBLIC
+            value: "true"
+        command: ["/home/lisk/wait-for-it.sh", "postgresql:5432", "--", "node", "/home/lisk/lisk/dist/index.js"]
+        volumeMounts:
+          - name: lsk-data
+            mountPath: /home/lisk/lisk/logs
+      restartPolicy: Always
+      volumes:
+        - name: lsk-data
+          azureDisk:
+            kind: Managed
+            diskName: lsk
+            diskURI: リソースID
+

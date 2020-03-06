@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1 # https://qiita.com/yoshis2/items/e600ec7ec3b67224f2b0
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis
+        service: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:5-alpine
+        args: ["--maxclinets", "500", "--tcp-backlog", "128", "--maxmemory-policy", "allkeys-lru", "--save", ""]
+        env:
+          - name: LISK_CACHE_ENABLED
+            value: "true"
+          - name: LISK_REDIS_HOST
+            value: redis
+          - name: LISK_REDIS_PORT
+            value: "6397"
+        # volumeMounts:
+        #  - name: redis-data
+        #    mountPath: /var/lib/postgresql/data
+      restartPolicy: Always
+      # volumes:
+      #  - name: postgresql-data
+      #    azureDisk:
+      #      kind: Managed
+      #      diskName: postgresql
+      #      diskURI: リソースID
+
