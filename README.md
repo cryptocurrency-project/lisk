@@ -1,5 +1,5 @@
 ## Lisk Formula
-[lisk-core](https://github.com/LiskHQ/lisk-core)
+[LiskHQ/lisk-core](https://github.com/LiskHQ/lisk-core)
 
 ## Lisk API
 [Lisk API](https://lisk.io/documentation/lisk-core/api.html)
